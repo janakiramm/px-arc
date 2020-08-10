@@ -1,4 +1,4 @@
-# SOURCE: https://install.portworx.com/?mc=false&kbver=1.17.5&b=true&s=%2Fdev%2Fnvme0n1p2%2C%2Fdev%2Fsda&cache=undefined&c=px-cluster-fb6dade4-f855-4392-ae75-cae9805b01cc&stork=true&st=k8s
+# SOURCE: https://install.portworx.com/?mc=false&kbver=1.18.6&b=true&s=%2Fdev%2Fnvme0n1p2%2C%2Fdev%2Fsda&c=px-cluster-fb6dade4-f855-4392-ae75-cae9805b01cc&stork=true&st=k8s
 ---
 kind: Service
 apiVersion: v1
@@ -308,7 +308,7 @@ metadata:
   labels:
     name: portworx
   annotations:
-    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.17.5&b=true&s=%2Fdev%2Fnvme0n1p2%2C%2Fdev%2Fsda&cache=undefined&c=px-cluster-fb6dade4-f855-4392-ae75-cae9805b01cc&stork=true&st=k8s"
+    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.18.6&b=true&s=%2Fdev%2Fnvme0n1p2%2C%2Fdev%2Fsda&c=px-cluster-fb6dade4-f855-4392-ae75-cae9805b01cc&stork=true&st=k8s"
 spec:
   selector:
     matchLabels:
@@ -338,7 +338,7 @@ spec:
       hostPID: false
       containers:
         - name: portworx
-          image: portworx/oci-monitor:2.5.3
+          image: portworx/oci-monitor:2.5.5
           imagePullPolicy: Always
           args:
             ["-c", "px-cluster-fb6dade4-f855-4392-ae75-cae9805b01cc", "-s", "/dev/nvme0n1p2", "-s", "/dev/sda", "-secret_type", "k8s", "-b", 
@@ -583,7 +583,8 @@ spec:
         - --verbose
         - --leader-elect=true
         - --health-monitor-interval=120
-        image: openstorage/stork:2.4.2
+        - --webhook-controller=false
+        image: openstorage/stork:2.4.3
         imagePullPolicy: Always
         env:
         - name: "PX_SERVICE_NAME"
@@ -755,7 +756,7 @@ spec:
           - --policy-configmap=stork-config
           - --policy-configmap-namespace=kube-system
           - --lock-object-name=stork-scheduler
-          image: gcr.io/google_containers/kube-scheduler-amd64:v1.17.5
+          image: gcr.io/google_containers/kube-scheduler-amd64:v1.18.6
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
