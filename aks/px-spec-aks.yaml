@@ -1,4 +1,4 @@
-# SOURCE: https://install.portworx.com/?mc=false&kbver=1.15.11&b=true&s=%22type%3DPremium_LRS%2Csize%3D50%22&kd=type%3DPremium_LRS%2Csize%3D150&cache=undefined&c=px-cluster-035d43d2-2d6a-4dd1-a2e8-98110dcf5c57&aks=true&stork=true&st=k8s
+# SOURCE: https://install.portworx.com/?mc=false&kbver=1.16.13&b=true&s=%22type%3DPremium_LRS%2Csize%3D50%22&kd=type%3DPremium_LRS%2Csize%3D150&c=px-cluster-035d43d2-2d6a-4dd1-a2e8-98110dcf5c57&aks=true&stork=true&st=k8s
 ---
 kind: Service
 apiVersion: v1
@@ -308,7 +308,7 @@ metadata:
   labels:
     name: portworx
   annotations:
-    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.15.11&b=true&s=%22type%3DPremium_LRS%2Csize%3D50%22&kd=type%3DPremium_LRS%2Csize%3D150&cache=undefined&c=px-cluster-035d43d2-2d6a-4dd1-a2e8-98110dcf5c57&aks=true&stork=true&st=k8s"
+    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.16.13&b=true&s=%22type%3DPremium_LRS%2Csize%3D50%22&kd=type%3DPremium_LRS%2Csize%3D150&c=px-cluster-035d43d2-2d6a-4dd1-a2e8-98110dcf5c57&aks=true&stork=true&st=k8s"
 spec:
   selector:
     matchLabels:
@@ -338,7 +338,7 @@ spec:
       hostPID: false
       containers:
         - name: portworx
-          image: portworx/oci-monitor:2.5.3
+          image: portworx/oci-monitor:2.5.5
           imagePullPolicy: Always
           args:
             ["-c", "px-cluster-035d43d2-2d6a-4dd1-a2e8-98110dcf5c57", "-s", "type=Premium_LRS,size=50", "-secret_type", "k8s", "-kvdb_dev", "type=Premium_LRS,size=150", "-b", 
@@ -598,7 +598,8 @@ spec:
         - --verbose
         - --leader-elect=true
         - --health-monitor-interval=120
-        image: openstorage/stork:2.4.2
+        - --webhook-controller=false
+        image: openstorage/stork:2.4.3
         imagePullPolicy: Always
         env:
         - name: "PX_SERVICE_NAME"
@@ -770,7 +771,7 @@ spec:
           - --policy-configmap=stork-config
           - --policy-configmap-namespace=kube-system
           - --lock-object-name=stork-scheduler
-          image: gcr.io/google_containers/kube-scheduler-amd64:v1.15.11
+          image: gcr.io/google_containers/kube-scheduler-amd64:v1.16.13
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -836,7 +837,7 @@ rules:
   verbs: ["create"]
 - apiGroups: [""]
   resources: ["configmaps"]
-  verbs: ["get", "create", "update"]
+  verbs: ["get", "create", "update", "list", "watch"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -897,7 +898,7 @@ spec:
         - --controllers=persistentvolume-binder,persistentvolume-expander
         - --use-service-account-credentials=true
         - --leader-elect-resource-lock=configmaps
-        image: gcr.io/google_containers/kube-controller-manager-amd64:v1.15.11
+        image: gcr.io/google_containers/kube-controller-manager-amd64:v1.16.13
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 8
