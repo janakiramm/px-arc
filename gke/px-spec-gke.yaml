@@ -563,6 +563,10 @@ spec:
         name: stork
         tier: control-plane
     spec:
+      volumes:
+      - name: gke-creds
+        secret:
+          secretName: gke-creds    
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -587,10 +591,16 @@ spec:
         env:
         - name: "PX_SERVICE_NAME"
           value: "portworx-api"
+        - name: CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE
+          value: /root/.gke/gcs-key.json                    
         resources:
           requests:
             cpu: '0.1'
         name: stork
+        volumeMounts:
+        - mountPath: /root/.gke/
+          name: gke-creds
+          readOnly: true                
       serviceAccountName: stork-account
 ---
 kind: StorageClass
